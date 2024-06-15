@@ -1,0 +1,21 @@
+# Use an existing Docker image with Python pre-installed
+FROM python:3.9
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the requirements.txt file into the container
+COPY requirements.txt /app
+
+# Install dbt and other dependencies from requirements.txt
+RUN apt-get update -y && \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# Copy the dbt project and profiles.yml into the container
+COPY dbt_dskola_sf /app/dbt_dskola_sf
+COPY dwh_scripts/ /app/dwh_scripts
+COPY dbt_dskola_sf/profiles.yml /root/.dbt/profiles.yml
+
+# Set the working directory for the dbt project
+WORKDIR /app/dbt_dskola_sf
